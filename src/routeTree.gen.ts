@@ -12,8 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as ApiResumeExtractRouteImport } from './routes/api/resume-extract'
+import { Route as ApiJobSearchRouteImport } from './routes/api/job-search'
+import { Route as ApiJobChatRouteImport } from './routes/api/job-chat'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProfilesIndexRouteImport } from './routes/_authenticated/profiles.index'
 import { Route as AuthenticatedProfilesIdRouteImport } from './routes/_authenticated/profiles.$id'
+import { Route as AuthenticatedJobsIdRouteImport } from './routes/_authenticated/jobs.$id'
+import { Route as AuthenticatedProfilesIdSearchRouteImport } from './routes/_authenticated/profiles.$id.search'
+import { Route as AuthenticatedProfilesIdJobsRouteImport } from './routes/_authenticated/profiles.$id.jobs'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -29,6 +36,26 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiResumeExtractRoute = ApiResumeExtractRouteImport.update({
+  id: '/api/resume-extract',
+  path: '/api/resume-extract',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobSearchRoute = ApiJobSearchRouteImport.update({
+  id: '/api/job-search',
+  path: '/api/job-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobChatRoute = ApiJobChatRouteImport.update({
+  id: '/api/job-chat',
+  path: '/api/job-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfilesIndexRoute =
   AuthenticatedProfilesIndexRouteImport.update({
     id: '/profiles/',
@@ -40,44 +67,114 @@ const AuthenticatedProfilesIdRoute = AuthenticatedProfilesIdRouteImport.update({
   path: '/profiles/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedJobsIdRoute = AuthenticatedJobsIdRouteImport.update({
+  id: '/jobs/$id',
+  path: '/jobs/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilesIdSearchRoute =
+  AuthenticatedProfilesIdSearchRouteImport.update({
+    id: '/search',
+    path: '/search',
+    getParentRoute: () => AuthenticatedProfilesIdRoute,
+  } as any)
+const AuthenticatedProfilesIdJobsRoute =
+  AuthenticatedProfilesIdJobsRouteImport.update({
+    id: '/jobs',
+    path: '/jobs',
+    getParentRoute: () => AuthenticatedProfilesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
-  '/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
+  '/jobs/$id': typeof AuthenticatedJobsIdRoute
+  '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
+  '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
   '/': typeof AuthenticatedIndexRoute
-  '/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/jobs/$id': typeof AuthenticatedJobsIdRoute
+  '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
+  '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/_authenticated/jobs/$id': typeof AuthenticatedJobsIdRoute
+  '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/_authenticated/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
+  '/_authenticated/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/profiles/$id' | '/profiles/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/settings'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
+    | '/jobs/$id'
+    | '/profiles/$id'
+    | '/profiles/'
+    | '/profiles/$id/jobs'
+    | '/profiles/$id/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/' | '/profiles/$id' | '/profiles'
+  to:
+    | '/auth'
+    | '/settings'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
+    | '/'
+    | '/jobs/$id'
+    | '/profiles/$id'
+    | '/profiles'
+    | '/profiles/$id/jobs'
+    | '/profiles/$id/search'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/settings'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
     | '/_authenticated/'
+    | '/_authenticated/jobs/$id'
     | '/_authenticated/profiles/$id'
     | '/_authenticated/profiles/'
+    | '/_authenticated/profiles/$id/jobs'
+    | '/_authenticated/profiles/$id/search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiJobChatRoute: typeof ApiJobChatRoute
+  ApiJobSearchRoute: typeof ApiJobSearchRoute
+  ApiResumeExtractRoute: typeof ApiResumeExtractRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -103,6 +200,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/resume-extract': {
+      id: '/api/resume-extract'
+      path: '/api/resume-extract'
+      fullPath: '/api/resume-extract'
+      preLoaderRoute: typeof ApiResumeExtractRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/job-search': {
+      id: '/api/job-search'
+      path: '/api/job-search'
+      fullPath: '/api/job-search'
+      preLoaderRoute: typeof ApiJobSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/job-chat': {
+      id: '/api/job-chat'
+      path: '/api/job-chat'
+      fullPath: '/api/job-chat'
+      preLoaderRoute: typeof ApiJobChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profiles/': {
       id: '/_authenticated/profiles/'
       path: '/profiles'
@@ -117,18 +242,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilesIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/jobs/$id': {
+      id: '/_authenticated/jobs/$id'
+      path: '/jobs/$id'
+      fullPath: '/jobs/$id'
+      preLoaderRoute: typeof AuthenticatedJobsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profiles/$id/search': {
+      id: '/_authenticated/profiles/$id/search'
+      path: '/search'
+      fullPath: '/profiles/$id/search'
+      preLoaderRoute: typeof AuthenticatedProfilesIdSearchRouteImport
+      parentRoute: typeof AuthenticatedProfilesIdRoute
+    }
+    '/_authenticated/profiles/$id/jobs': {
+      id: '/_authenticated/profiles/$id/jobs'
+      path: '/jobs'
+      fullPath: '/profiles/$id/jobs'
+      preLoaderRoute: typeof AuthenticatedProfilesIdJobsRouteImport
+      parentRoute: typeof AuthenticatedProfilesIdRoute
+    }
   }
 }
 
+interface AuthenticatedProfilesIdRouteChildren {
+  AuthenticatedProfilesIdJobsRoute: typeof AuthenticatedProfilesIdJobsRoute
+  AuthenticatedProfilesIdSearchRoute: typeof AuthenticatedProfilesIdSearchRoute
+}
+
+const AuthenticatedProfilesIdRouteChildren: AuthenticatedProfilesIdRouteChildren =
+  {
+    AuthenticatedProfilesIdJobsRoute: AuthenticatedProfilesIdJobsRoute,
+    AuthenticatedProfilesIdSearchRoute: AuthenticatedProfilesIdSearchRoute,
+  }
+
+const AuthenticatedProfilesIdRouteWithChildren =
+  AuthenticatedProfilesIdRoute._addFileChildren(
+    AuthenticatedProfilesIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedProfilesIdRoute: typeof AuthenticatedProfilesIdRoute
+  AuthenticatedJobsIdRoute: typeof AuthenticatedJobsIdRoute
+  AuthenticatedProfilesIdRoute: typeof AuthenticatedProfilesIdRouteWithChildren
   AuthenticatedProfilesIndexRoute: typeof AuthenticatedProfilesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedProfilesIdRoute: AuthenticatedProfilesIdRoute,
+  AuthenticatedJobsIdRoute: AuthenticatedJobsIdRoute,
+  AuthenticatedProfilesIdRoute: AuthenticatedProfilesIdRouteWithChildren,
   AuthenticatedProfilesIndexRoute: AuthenticatedProfilesIndexRoute,
 }
 
@@ -138,6 +304,9 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiJobChatRoute: ApiJobChatRoute,
+  ApiJobSearchRoute: ApiJobSearchRoute,
+  ApiResumeExtractRoute: ApiResumeExtractRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
