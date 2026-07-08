@@ -33,20 +33,26 @@ export function jsonError(status: number, message: string): Response {
   });
 }
 
-export function n8nConfig(): { base: string; secret: string } | Response {
-  const base = process.env.N8N_WEBHOOK_BASE;
+const N8N_WEBHOOK_URLS: Record<string, string> = {
+  "/resume-extract": "https://n8nautomations.noctix.app/webhook/resume-extract",
+  "/job-search-run": "https://n8nautomations.noctix.app/webhook/job-search-run",
+  "/job-chat": "https://n8nautomations.noctix.app/webhook/job-chat",
+};
+
+export function n8nConfig(path: string): { url: string; secret: string } | Response {
   const secret = process.env.N8N_WEBHOOK_SECRET;
-  if (!base || !secret) {
+  const url = N8N_WEBHOOK_URLS[path];
+  if (!url || !secret) {
     return jsonError(500, "Service is temporarily unavailable");
   }
-  return { base, secret };
+  return { url, secret };
 }
 
 export async function proxyToN8n(path: string, body: unknown): Promise<Response> {
-  const cfg = n8nConfig();
+  const cfg = n8nConfig(path);
   if (cfg instanceof Response) return cfg;
   try {
-    const upstream = await fetch(`${cfg.base}${path}`, {
+    const upstream = await fetch(cfg.url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
