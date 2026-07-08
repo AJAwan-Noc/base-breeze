@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as ApiResumeExtractRouteImport } from './routes/api/resume-extract'
+import { Route as ApiJobSearchRouteImport } from './routes/api/job-search'
+import { Route as ApiJobChatRouteImport } from './routes/api/job-chat'
 import { Route as AuthenticatedProfilesIndexRouteImport } from './routes/_authenticated/profiles.index'
 import { Route as AuthenticatedProfilesIdRouteImport } from './routes/_authenticated/profiles.$id'
 
@@ -29,6 +32,21 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiResumeExtractRoute = ApiResumeExtractRouteImport.update({
+  id: '/api/resume-extract',
+  path: '/api/resume-extract',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobSearchRoute = ApiJobSearchRouteImport.update({
+  id: '/api/job-search',
+  path: '/api/job-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJobChatRoute = ApiJobChatRouteImport.update({
+  id: '/api/job-chat',
+  path: '/api/job-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProfilesIndexRoute =
   AuthenticatedProfilesIndexRouteImport.update({
     id: '/profiles/',
@@ -44,11 +62,17 @@ const AuthenticatedProfilesIdRoute = AuthenticatedProfilesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
   '/profiles/$id': typeof AuthenticatedProfilesIdRoute
   '/profiles/': typeof AuthenticatedProfilesIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
   '/': typeof AuthenticatedIndexRoute
   '/profiles/$id': typeof AuthenticatedProfilesIdRoute
   '/profiles': typeof AuthenticatedProfilesIndexRoute
@@ -57,19 +81,39 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/api/job-chat': typeof ApiJobChatRoute
+  '/api/job-search': typeof ApiJobSearchRoute
+  '/api/resume-extract': typeof ApiResumeExtractRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRoute
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/profiles/$id' | '/profiles/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
+    | '/profiles/$id'
+    | '/profiles/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/' | '/profiles/$id' | '/profiles'
+  to:
+    | '/auth'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
+    | '/'
+    | '/profiles/$id'
+    | '/profiles'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/api/job-chat'
+    | '/api/job-search'
+    | '/api/resume-extract'
     | '/_authenticated/'
     | '/_authenticated/profiles/$id'
     | '/_authenticated/profiles/'
@@ -78,6 +122,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiJobChatRoute: typeof ApiJobChatRoute
+  ApiJobSearchRoute: typeof ApiJobSearchRoute
+  ApiResumeExtractRoute: typeof ApiResumeExtractRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -102,6 +149,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/resume-extract': {
+      id: '/api/resume-extract'
+      path: '/api/resume-extract'
+      fullPath: '/api/resume-extract'
+      preLoaderRoute: typeof ApiResumeExtractRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/job-search': {
+      id: '/api/job-search'
+      path: '/api/job-search'
+      fullPath: '/api/job-search'
+      preLoaderRoute: typeof ApiJobSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/job-chat': {
+      id: '/api/job-chat'
+      path: '/api/job-chat'
+      fullPath: '/api/job-chat'
+      preLoaderRoute: typeof ApiJobChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/profiles/': {
       id: '/_authenticated/profiles/'
@@ -138,6 +206,9 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiJobChatRoute: ApiJobChatRoute,
+  ApiJobSearchRoute: ApiJobSearchRoute,
+  ApiResumeExtractRoute: ApiResumeExtractRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
