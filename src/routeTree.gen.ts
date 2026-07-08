@@ -17,6 +17,7 @@ import { Route as ApiJobSearchRouteImport } from './routes/api/job-search'
 import { Route as ApiJobChatRouteImport } from './routes/api/job-chat'
 import { Route as AuthenticatedProfilesIndexRouteImport } from './routes/_authenticated/profiles.index'
 import { Route as AuthenticatedProfilesIdRouteImport } from './routes/_authenticated/profiles.$id'
+import { Route as AuthenticatedProfilesIdSearchRouteImport } from './routes/_authenticated/profiles.$id.search'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -58,6 +59,12 @@ const AuthenticatedProfilesIdRoute = AuthenticatedProfilesIdRouteImport.update({
   path: '/profiles/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfilesIdSearchRoute =
+  AuthenticatedProfilesIdSearchRouteImport.update({
+    id: '/search',
+    path: '/search',
+    getParentRoute: () => AuthenticatedProfilesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -65,8 +72,9 @@ export interface FileRoutesByFullPath {
   '/api/job-chat': typeof ApiJobChatRoute
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
-  '/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -74,8 +82,9 @@ export interface FileRoutesByTo {
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
   '/': typeof AuthenticatedIndexRoute
-  '/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,8 +94,9 @@ export interface FileRoutesById {
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRoute
+  '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/_authenticated/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/api/resume-extract'
     | '/profiles/$id'
     | '/profiles/'
+    | '/profiles/$id/search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/'
     | '/profiles/$id'
     | '/profiles'
+    | '/profiles/$id/search'
   id:
     | '__root__'
     | '/_authenticated'
@@ -117,6 +129,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/profiles/$id'
     | '/_authenticated/profiles/'
+    | '/_authenticated/profiles/$id/search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,18 +198,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilesIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profiles/$id/search': {
+      id: '/_authenticated/profiles/$id/search'
+      path: '/search'
+      fullPath: '/profiles/$id/search'
+      preLoaderRoute: typeof AuthenticatedProfilesIdSearchRouteImport
+      parentRoute: typeof AuthenticatedProfilesIdRoute
+    }
   }
 }
 
+interface AuthenticatedProfilesIdRouteChildren {
+  AuthenticatedProfilesIdSearchRoute: typeof AuthenticatedProfilesIdSearchRoute
+}
+
+const AuthenticatedProfilesIdRouteChildren: AuthenticatedProfilesIdRouteChildren =
+  {
+    AuthenticatedProfilesIdSearchRoute: AuthenticatedProfilesIdSearchRoute,
+  }
+
+const AuthenticatedProfilesIdRouteWithChildren =
+  AuthenticatedProfilesIdRoute._addFileChildren(
+    AuthenticatedProfilesIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedProfilesIdRoute: typeof AuthenticatedProfilesIdRoute
+  AuthenticatedProfilesIdRoute: typeof AuthenticatedProfilesIdRouteWithChildren
   AuthenticatedProfilesIndexRoute: typeof AuthenticatedProfilesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedProfilesIdRoute: AuthenticatedProfilesIdRoute,
+  AuthenticatedProfilesIdRoute: AuthenticatedProfilesIdRouteWithChildren,
   AuthenticatedProfilesIndexRoute: AuthenticatedProfilesIndexRoute,
 }
 
