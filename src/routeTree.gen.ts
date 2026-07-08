@@ -15,9 +15,12 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as ApiResumeExtractRouteImport } from './routes/api/resume-extract'
 import { Route as ApiJobSearchRouteImport } from './routes/api/job-search'
 import { Route as ApiJobChatRouteImport } from './routes/api/job-chat'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProfilesIndexRouteImport } from './routes/_authenticated/profiles.index'
 import { Route as AuthenticatedProfilesIdRouteImport } from './routes/_authenticated/profiles.$id'
+import { Route as AuthenticatedJobsIdRouteImport } from './routes/_authenticated/jobs.$id'
 import { Route as AuthenticatedProfilesIdSearchRouteImport } from './routes/_authenticated/profiles.$id.search'
+import { Route as AuthenticatedProfilesIdJobsRouteImport } from './routes/_authenticated/profiles.$id.jobs'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -48,6 +51,11 @@ const ApiJobChatRoute = ApiJobChatRouteImport.update({
   path: '/api/job-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfilesIndexRoute =
   AuthenticatedProfilesIndexRouteImport.update({
     id: '/profiles/',
@@ -59,43 +67,63 @@ const AuthenticatedProfilesIdRoute = AuthenticatedProfilesIdRouteImport.update({
   path: '/profiles/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedJobsIdRoute = AuthenticatedJobsIdRouteImport.update({
+  id: '/jobs/$id',
+  path: '/jobs/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfilesIdSearchRoute =
   AuthenticatedProfilesIdSearchRouteImport.update({
     id: '/search',
     path: '/search',
     getParentRoute: () => AuthenticatedProfilesIdRoute,
   } as any)
+const AuthenticatedProfilesIdJobsRoute =
+  AuthenticatedProfilesIdJobsRouteImport.update({
+    id: '/jobs',
+    path: '/jobs',
+    getParentRoute: () => AuthenticatedProfilesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/api/job-chat': typeof ApiJobChatRoute
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
+  '/jobs/$id': typeof AuthenticatedJobsIdRoute
   '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
   '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/api/job-chat': typeof ApiJobChatRoute
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
   '/': typeof AuthenticatedIndexRoute
+  '/jobs/$id': typeof AuthenticatedJobsIdRoute
   '/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/profiles': typeof AuthenticatedProfilesIndexRoute
+  '/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
   '/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/api/job-chat': typeof ApiJobChatRoute
   '/api/job-search': typeof ApiJobSearchRoute
   '/api/resume-extract': typeof ApiResumeExtractRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/jobs/$id': typeof AuthenticatedJobsIdRoute
   '/_authenticated/profiles/$id': typeof AuthenticatedProfilesIdRouteWithChildren
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/_authenticated/profiles/$id/jobs': typeof AuthenticatedProfilesIdJobsRoute
   '/_authenticated/profiles/$id/search': typeof AuthenticatedProfilesIdSearchRoute
 }
 export interface FileRouteTypes {
@@ -103,32 +131,41 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/settings'
     | '/api/job-chat'
     | '/api/job-search'
     | '/api/resume-extract'
+    | '/jobs/$id'
     | '/profiles/$id'
     | '/profiles/'
+    | '/profiles/$id/jobs'
     | '/profiles/$id/search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/settings'
     | '/api/job-chat'
     | '/api/job-search'
     | '/api/resume-extract'
     | '/'
+    | '/jobs/$id'
     | '/profiles/$id'
     | '/profiles'
+    | '/profiles/$id/jobs'
     | '/profiles/$id/search'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/settings'
     | '/api/job-chat'
     | '/api/job-search'
     | '/api/resume-extract'
     | '/_authenticated/'
+    | '/_authenticated/jobs/$id'
     | '/_authenticated/profiles/$id'
     | '/_authenticated/profiles/'
+    | '/_authenticated/profiles/$id/jobs'
     | '/_authenticated/profiles/$id/search'
   fileRoutesById: FileRoutesById
 }
@@ -184,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiJobChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profiles/': {
       id: '/_authenticated/profiles/'
       path: '/profiles'
@@ -198,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilesIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/jobs/$id': {
+      id: '/_authenticated/jobs/$id'
+      path: '/jobs/$id'
+      fullPath: '/jobs/$id'
+      preLoaderRoute: typeof AuthenticatedJobsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profiles/$id/search': {
       id: '/_authenticated/profiles/$id/search'
       path: '/search'
@@ -205,15 +256,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilesIdSearchRouteImport
       parentRoute: typeof AuthenticatedProfilesIdRoute
     }
+    '/_authenticated/profiles/$id/jobs': {
+      id: '/_authenticated/profiles/$id/jobs'
+      path: '/jobs'
+      fullPath: '/profiles/$id/jobs'
+      preLoaderRoute: typeof AuthenticatedProfilesIdJobsRouteImport
+      parentRoute: typeof AuthenticatedProfilesIdRoute
+    }
   }
 }
 
 interface AuthenticatedProfilesIdRouteChildren {
+  AuthenticatedProfilesIdJobsRoute: typeof AuthenticatedProfilesIdJobsRoute
   AuthenticatedProfilesIdSearchRoute: typeof AuthenticatedProfilesIdSearchRoute
 }
 
 const AuthenticatedProfilesIdRouteChildren: AuthenticatedProfilesIdRouteChildren =
   {
+    AuthenticatedProfilesIdJobsRoute: AuthenticatedProfilesIdJobsRoute,
     AuthenticatedProfilesIdSearchRoute: AuthenticatedProfilesIdSearchRoute,
   }
 
@@ -223,13 +283,17 @@ const AuthenticatedProfilesIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedJobsIdRoute: typeof AuthenticatedJobsIdRoute
   AuthenticatedProfilesIdRoute: typeof AuthenticatedProfilesIdRouteWithChildren
   AuthenticatedProfilesIndexRoute: typeof AuthenticatedProfilesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedJobsIdRoute: AuthenticatedJobsIdRoute,
   AuthenticatedProfilesIdRoute: AuthenticatedProfilesIdRouteWithChildren,
   AuthenticatedProfilesIndexRoute: AuthenticatedProfilesIndexRoute,
 }

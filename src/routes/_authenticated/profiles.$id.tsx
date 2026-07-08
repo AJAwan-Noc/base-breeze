@@ -91,10 +91,10 @@ function ProfileDetail() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link to="/profiles/$id" params={{ id }}>Jobs</Link>
+              <Link to="/profiles/$id/jobs" params={{ id }}>Jobs</Link>
             </Button>
             <Button asChild>
-              <Link to="/profiles/$id" params={{ id }}><Search className="h-4 w-4" /> Run search</Link>
+              <Link to="/profiles/$id/search" params={{ id }}><Search className="h-4 w-4" /> Run search</Link>
             </Button>
           </div>
         </div>
