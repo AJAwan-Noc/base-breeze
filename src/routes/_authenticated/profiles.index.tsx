@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Plus, Archive, ArchiveRestore, ArrowRight } from "lucide-react";
 import type { Profile } from "@/lib/db-types";
 
-export const Route = createFileRoute("/_authenticated/profiles")({
+export const Route = createFileRoute("/_authenticated/profiles/")({
   component: ProfilesPage,
 });
 
