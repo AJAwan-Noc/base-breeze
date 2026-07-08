@@ -11,17 +11,19 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 type JobSource = {
   id: string;
-  name: string | null;
-  slug: string | null;
+  source_key: string | null;
+  display_name: string | null;
   is_enabled: boolean | null;
-  description: string | null;
 };
 
 function SettingsPage() {
   const q = useQuery({
     queryKey: ["job_sources"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("job_sources").select("*").order("name");
+      const { data, error } = await supabase
+        .from("job_sources")
+        .select("id, source_key, display_name, is_enabled")
+        .order("display_name");
       if (error) throw error;
       return (data ?? []) as JobSource[];
     },
@@ -45,8 +47,10 @@ function SettingsPage() {
               {q.data!.map((s) => (
                 <li key={s.id} className="py-3 flex items-start justify-between gap-3">
                   <div>
-                    <div className="font-medium">{s.name ?? s.slug ?? s.id}</div>
-                    {s.description && <div className="text-sm text-muted-foreground">{s.description}</div>}
+                    <div className="font-medium">{s.display_name ?? s.source_key ?? s.id}</div>
+                    {s.source_key && s.display_name && (
+                      <div className="text-sm text-muted-foreground">{s.source_key}</div>
+                    )}
                   </div>
                   <Badge variant={s.is_enabled ? "default" : "outline"}>
                     {s.is_enabled ? "Enabled" : "Disabled"}
@@ -55,6 +59,7 @@ function SettingsPage() {
               ))}
             </ul>
           )}
+
         </CardContent>
       </Card>
     </div>
